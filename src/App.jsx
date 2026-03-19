@@ -10,6 +10,7 @@ const App = () => {
     { color: '#B0C4B1', name: 'Sage Green', locked: false },
     { color: '#4A5759', name: 'Dark Slate Gray', locked: false }
   ])
+  const [showList, setShowList] = useState(false);
 
   const getRandomColor = () => {
     return '#' + Math.floor(Math.random() * 16777215).toString(16).padStart(6, '0')
@@ -58,7 +59,7 @@ const App = () => {
       setColors(JSON.parse(saved));
     }
   }, []);
-  const [showList, setShowList] = useState(false);
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100vh', width: '100vw', overflow: 'hidden', textAlign: 'center' }}>
       <Navbar savedCount={lockedCount} onSave={saveCurrentPalette} onListClick={() =>
