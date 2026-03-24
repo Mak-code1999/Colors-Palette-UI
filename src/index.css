@@ -5,7 +5,7 @@ body {
 }
 
 .color-bar {
-  height: 100vh;
+  height: 100%;
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -15,6 +15,7 @@ body {
   transition: all 0.3s ease-in-out;
   cursor: pointer;
 }
+
 
 .h2 {
   font-size: 2rem;
@@ -32,11 +33,11 @@ body {
   animation: fadeIn 0.2s ease;
 }
 
-button {
+button, .nav-btn {
   background: white;
   border: none;
-  border-radius: 12%;
-  width: auto;
+  border-radius: 12px;
+  min-width: 110px;
   height: 45px;
   display: flex;
   justify-content: center;
@@ -47,12 +48,18 @@ button {
   flex-direction: row;
   gap: 10px;
   padding: 10px 20px;
+  text-decoration: none;
+  color: black;
+  font-family: inherit;
 }
 
-button:hover {
+
+button:hover, .nav-btn:hover {
   transform: scale(1.1);
   background: #f0f0f0;
 }
+
+
 
 @keyframes fadeIn {
   from {

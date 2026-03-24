@@ -11,8 +11,10 @@ const ColorCards = ({ color, toggleLock }) => {
             style={{ backgroundColor: color.color }}
             className="color-bar"
         >
-            <h2 className='h2'>{color.color}</h2>
-            <p className='font-medium'>{color.name}</p>
+            <h2 className='h2'>{color.color || color.hex}</h2>
+            <p className='font-medium' style={{ margin: '5px 0' }}>{color.name}</p>
+            {color.rgb && <p style={{ fontSize: '0.8rem', opacity: 0.7 }}></p>}
+
 
             {isHovered && (
                 <div className="ishovered">
