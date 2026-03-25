@@ -6,15 +6,14 @@ const ColorContext = createContext();
 
 export const ColorProvider = ({ children }) => {
     const [colors, setColors] = useState(initialColors);
+    const [palettes, setPalettes] = useState([]);
     const [loading, setLoading] = useState(false);
 
     const getRandomColor = () => {
         return '#' + Math.floor(Math.random() * 16777215).toString(16).padStart(6, '0');
     };
 
-
     const generateNewColors = async () => {
-
         setLoading(true);
         const nextColors = await Promise.all(
             colors.map(async (c) => {
@@ -36,15 +35,46 @@ export const ColorProvider = ({ children }) => {
         });
     };
 
-    const saveCurrentPalette = () => {
-        localStorage.setItem("mySavedColors", JSON.stringify(colors));
-        alert("Palette Saved Over the Internet! (Well, locally for now!) 🧠🎨");
+    const savePaletteWithName = (name) => {
+        const newPalette = {
+            id: Date.now(),
+            name: name,
+            colors: [...colors]
+        };
+
+        const updatedPalettes = [...palettes, newPalette];
+        setPalettes(updatedPalettes);
+        localStorage.setItem("mySavedPalettes", JSON.stringify(updatedPalettes));
+    };
+
+    const deletePalette = (id) => {
+        const updatedPalettes = palettes.filter(p => p.id !== id);
+        setPalettes(updatedPalettes);
+        localStorage.setItem("mySavedPalettes", JSON.stringify(updatedPalettes));
+    };
+
+    const editPalette = (id, newName) => {
+        const updatedPalettes = palettes.map(p => 
+            p.id === id ? { ...p, name: newName } : p
+        );
+        setPalettes(updatedPalettes);
+        localStorage.setItem("mySavedPalettes", JSON.stringify(updatedPalettes));
+    };
+
+    const loadColors = (newColors) => {
+        setColors(newColors);
     };
 
     useEffect(() => {
-        const saved = localStorage.getItem("mySavedColors");
-        if (saved) {
-            setColors(JSON.parse(saved));
+        const savedPalettes = localStorage.getItem("mySavedPalettes");
+        if (savedPalettes) {
+            setPalettes(JSON.parse(savedPalettes));
+        }
+
+        // Keep the old single palette logic if needed, or migration
+        const savedColors = localStorage.getItem("mySavedColors");
+        if (savedColors && !colors.some(c => c.locked)) {
+             setColors(JSON.parse(savedColors));
         }
     }, []);
 
@@ -62,10 +92,15 @@ export const ColorProvider = ({ children }) => {
     const value = {
         colors,
         loading,
+        palettes,
         generateNewColors,
         toggleLock,
-        saveCurrentPalette,
-        lockedCount: colors.filter(c => c.locked).length
+        savePaletteWithName,
+        deletePalette,
+        editPalette,
+        loadColors,
+        lockedCount: colors.filter(c => c.locked).length,
+        savedPalettesCount: palettes.length
     };
 
     return (
